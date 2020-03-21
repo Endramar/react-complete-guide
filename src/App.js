@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import Person from './Person/Person';
-import Radium, { StyleRoot } from 'radium';
 
 class App extends Component {
 
@@ -91,7 +90,7 @@ class App extends Component {
 
     return (
       // StyleRoot is necassary for media queries or keyframes. we do not need them for sudo selectors!!!
-      <StyleRoot> 
+      // <StyleRoot> 
         <div className="App" >
           <h1>Hi I am a react app!</h1>
           <p className={paragraphClass}>This is working</p>
@@ -99,11 +98,11 @@ class App extends Component {
             onClick={this.togglePersonsHandler}>Toggle</button>
           {personRenderList}
         </div>
-      </StyleRoot>
+      // </StyleRoot>
     );
   }
 
 }
 
-export default Radium(App); // we need to wrap the app with radium to make it work !!!
-
+// export default Radium(App); // we need to wrap the app with radium to make it work !!!
+export default App;
