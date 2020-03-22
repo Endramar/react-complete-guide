@@ -1,9 +1,13 @@
 import React from 'react';
 
 import classes from './Person.css';
-import Template  from '../../../hoc/Template';
+import Template from '../../../hoc/Template';
 
 import withClass2 from '../../../hoc/withClass2';
+
+import PropTypes from 'prop-types';
+
+import AuthContext from '../../../context/auth-context';
 
 // import styled from 'styled-components';
 
@@ -19,31 +23,41 @@ import withClass2 from '../../../hoc/withClass2';
 //     width: '450px'
 // }`;
 
-const person = (props) => {
+class Person extends React.Component {
 
-    // A TEST CODE WHICH THROWS AN ERROR
-    // let rnd = Math.random();
-    // if(rnd > 0.3){
-    //     throw new Error('This is a person error!')
-    // }
+    static contextType = AuthContext; // this has to be typed exactly like this to access the context;
 
-    return (
-        // a styled div created by using styled-components !!!!!
-        // <StyledDiv>
-        // <div className={classes.Person}>
 
-        // we can use React.Fragment as welll !!!!!
-        <Template> 
-            <p onClick={props.click}>I am {props.name} and I am {props.age} years old.</p>
-            <p>{props.children}</p>
-            <input type="text" onChange={props.change} value={props.name} />
-        </Template>
+    componentDidMount(){
+        console.log(this.context.isAuthenticated);
+    }
 
-        // </div>
-        // </StyledDiv>
-    );
+    render() {
+        return (
+            <AuthContext.Consumer>
+                {
+                    (context) => <Template>
+                        {context.isAuthenticated ? <p>It is an authenticate Person</p> : <p>Please log in!!</p>}
+                        <p onClick={this.props.click}>I am {this.props.name} and I am {this.props.age} years old.</p>
+                        <p>{this.props.children}</p>
+                        <input type="text" onChange={this.props.change} value={this.props.name} />
+                    </Template>
+                }
+            </AuthContext.Consumer>
+        );
+    }
 }
+
+
+
+/// restrictiobn of proptypes
+Person.protoType = {
+    name: PropTypes.string,
+    click: PropTypes.func,
+    change: PropTypes.func,
+    age: PropTypes.number
+};
 
 // export default Radium(person);
 
-export default withClass2(person, classes.Person);
+export default withClass2(Person, classes.Person);

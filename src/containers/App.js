@@ -12,8 +12,10 @@ import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 
 import WithClass from '../hoc/WithClass';
-import  Template  from '../hoc/Template';
+import Template from '../hoc/Template';
 import withClass2 from '../hoc/withClass2';
+
+import AuthContext from '../context/auth-context';
 
 class App extends Component {
 
@@ -24,7 +26,8 @@ class App extends Component {
       { id: 3, name: "Okan", age: 26 }
     ],
     showPersons: false,
-    changeCount : 0 // a sample value which keeps count of name  change 
+    changeCount: 0, // a sample value which keeps count of name  change 
+    isAuthenticated: false
   };
 
 
@@ -52,16 +55,19 @@ class App extends Component {
     persons[selectedPersonIndex] = selectedPerson;
 
     // this.setState({ personList: persons , changeCount : this.state.changeCount + 1 }); // This is wron because we depend on the old state for changeCount !!!
-    
+
     // THE CORRECT WAY IS BELOW
 
-    this.setState((prevState,prevProps) => {
+    this.setState((prevState, prevProps) => {
       return {
-        personList : persons,
-        changeCount : prevState.changeCount + 1
+        personList: persons,
+        changeCount: prevState.changeCount + 1
       }
     });
-    
+  }
+
+  loginHandler = () => {
+    this.setState({ isAuthenticated: true });
   }
 
 
@@ -73,8 +79,10 @@ class App extends Component {
 
       // <WithClass classes={classes.App} >
       <Template>
-        <Cockpit toggle={this.togglePersonsHandler} personCount={this.state.personList.length}></Cockpit>
-        {this.state.showPersons ? <Persons clicked={this.deletePersonHandler} changed={this.nameChangeHandler} persons={this.state.personList}></Persons> : null}
+        <AuthContext.Provider value={{ isAuthenticated: this.state.isAuthenticated, login: this.loginHandler }}>
+          <Cockpit toggle={this.togglePersonsHandler} personCount={this.state.personList.length}></Cockpit>
+          {this.state.showPersons ? <Persons clicked={this.deletePersonHandler} changed={this.nameChangeHandler} persons={this.state.personList}></Persons> : null}
+        </AuthContext.Provider>
       </Template>
 
       /* </WithClass> */
